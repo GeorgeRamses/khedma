@@ -1,0 +1,22 @@
+package com.georgeramsis.khedma.khedma.di
+
+import com.georgeramsis.khedma.khedma.data.repository.AuthRepository
+import com.georgeramsis.khedma.khedma.supabase.getSupabaseKey
+import com.georgeramsis.khedma.khedma.supabase.getSupabaseUrl
+import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.postgrest.Postgrest
+import org.koin.dsl.module
+
+val supabaseModule = module {
+    single {
+        createSupabaseClient(
+            supabaseUrl = getSupabaseUrl(),
+            supabaseKey = getSupabaseKey()
+        ) {
+            install(Postgrest)
+            install(Auth)
+        }
+    }
+    single { AuthRepository(get()) }
+}
