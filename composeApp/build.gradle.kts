@@ -101,11 +101,21 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "com.georgeramsis.khedma.khedma.MainKt"
-
+        jvmArgs += listOf(
+            "-DSUPABASE_URL=${supabaseUrl}",
+            "-DSUPABASE_KEY=${supabaseKey}"
+        )
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Exe, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.georgeramsis.khedma.khedma"
             packageVersion = "1.0.0"
         }
+    }
+}
+
+tasks.withType<JavaExec>().configureEach {
+    if (name == "jvmRun") {
+        systemProperty("SUPABASE_URL", supabaseUrl)
+        systemProperty("SUPABASE_KEY", supabaseKey)
     }
 }
