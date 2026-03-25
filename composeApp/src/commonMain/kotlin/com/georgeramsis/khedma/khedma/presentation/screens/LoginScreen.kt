@@ -15,7 +15,7 @@ import com.georgeramsis.khedma.khedma.presentation.viewmodel.AuthViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
+fun LoginScreen(onLoginSuccess: () -> Unit, viewModel: AuthViewModel = koinViewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
@@ -25,8 +25,15 @@ fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
         if (state is AuthState.Error) {
             errorMessage = (state as AuthState.Error).message
         }
+        if (state is AuthState.Success) {
+            onLoginSuccess()
+        }
     }
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         TextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
         Spacer(Modifier.height(8.dp))
         TextField(value = password, onValueChange = { password = it }, label = { Text("Password") })
@@ -41,7 +48,6 @@ fun LoginScreen(viewModel: AuthViewModel = koinViewModel()) {
         when (state) {
             is AuthState.Loading -> CircularProgressIndicator()
             is AuthState.Error -> Text(text = errorMessage)
-            is AuthState.Success -> {Text("You have logged successfully")}
             else -> {}
         }
     }

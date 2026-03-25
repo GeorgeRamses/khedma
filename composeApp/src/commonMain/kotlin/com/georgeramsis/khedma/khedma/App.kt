@@ -1,29 +1,34 @@
 package com.georgeramsis.khedma.khedma
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.georgeramsis.khedma.khedma.presentation.navigation.Routes.Home
+import com.georgeramsis.khedma.khedma.presentation.navigation.Routes.Login
+import com.georgeramsis.khedma.khedma.presentation.screens.HomeScreen
 import com.georgeramsis.khedma.khedma.presentation.screens.LoginScreen
-import org.jetbrains.compose.resources.painterResource
-
-import khedma.composeapp.generated.resources.Res
-import khedma.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 @Preview
 fun App() {
     MaterialTheme {
-        LoginScreen()
+        val navController = rememberNavController()
+        NavHost(navController, startDestination = Login.route) {
+            composable(Login.route) {
+                LoginScreen(onLoginSuccess = {
+                    navController.navigate(Home.route) {
+                        popUpTo(Login.route) {
+                            inclusive = true
+                        }
+                    }
+                })
+            }
+            composable(Home.route) {
+                HomeScreen()
+            }
+        }
     }
 }

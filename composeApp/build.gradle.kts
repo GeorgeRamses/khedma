@@ -9,6 +9,26 @@ val localProperties = Properties().apply {
 val supabaseUrl = localProperties.getProperty("SUPABASE_URL") ?: ""
 val supabaseKey = localProperties.getProperty("SUPABASE_KEY") ?: ""
 
+// Task to generate SupabaseConfig for Desktop
+val generateDesktopConfig = tasks.register("generateDesktopSupabaseConfig") {
+    val outputDir = layout.buildDirectory.dir("generated/supabase/kotlin")
+    val url = supabaseUrl
+    val key = supabaseKey
+    outputs.dir(outputDir)
+    doLast {
+        val outDir = outputDir.get()
+            .file("com/georgeramsis/khedma/khedma/supabase/SupabaseConfig.jvm.kt")
+            .asFile
+        outDir.parentFile.mkdirs()
+        outDir.writeText("""
+            package com.georgeramsis.khedma.khedma.supabase
+            
+            actual fun getSupabaseUrl(): String = "$url"
+            actual fun getSupabaseKey(): String = "$key"
+        """.trimIndent())
+    }
+}
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
@@ -45,7 +65,6 @@ kotlin {
             implementation(libs.supabase.postgrest)
             implementation(libs.supabase.auth)
             implementation(libs.supabase.realtime)
-            // commonMain
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
@@ -60,7 +79,18 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.cio)
         }
+        // Add generated source to jvmMain
+        jvmMain {
+            kotlin.srcDir(
+                layout.buildDirectory.dir("generated/supabase/kotlin")
+            )
+        }
     }
+}
+
+// Make jvm compilation depend on our generation task
+tasks.named("compileKotlinJvm") {
+    dependsOn(generateDesktopConfig)
 }
 
 android {
@@ -101,21 +131,10 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "com.georgeramsis.khedma.khedma.MainKt"
-        jvmArgs += listOf(
-            "-DSUPABASE_URL=${supabaseUrl}",
-            "-DSUPABASE_KEY=${supabaseKey}"
-        )
         nativeDistributions {
             targetFormats(TargetFormat.Exe, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.georgeramsis.khedma.khedma"
             packageVersion = "1.0.0"
         }
-    }
-}
-
-tasks.withType<JavaExec>().configureEach {
-    if (name == "jvmRun") {
-        systemProperty("SUPABASE_URL", supabaseUrl)
-        systemProperty("SUPABASE_KEY", supabaseKey)
     }
 }
