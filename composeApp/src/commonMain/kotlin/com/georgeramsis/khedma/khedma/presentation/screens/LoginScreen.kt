@@ -18,13 +18,10 @@ import org.koin.compose.viewmodel.koinViewModel
 fun LoginScreen(onLoginSuccess: () -> Unit, viewModel: AuthViewModel = koinViewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(state) {
-        if (state is AuthState.Error) {
-            errorMessage = (state as AuthState.Error).message
-        }
+
         if (state is AuthState.Success) {
             onLoginSuccess()
         }
@@ -47,7 +44,11 @@ fun LoginScreen(onLoginSuccess: () -> Unit, viewModel: AuthViewModel = koinViewM
 
         when (state) {
             is AuthState.Loading -> CircularProgressIndicator()
-            is AuthState.Error -> Text(text = errorMessage)
+            is AuthState.Error -> {
+                val error = (state as AuthState.Error).message
+                Text(text = error)
+            }
+
             else -> {}
         }
     }
