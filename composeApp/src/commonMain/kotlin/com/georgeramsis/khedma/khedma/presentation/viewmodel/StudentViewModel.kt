@@ -2,6 +2,7 @@ package com.georgeramsis.khedma.khedma.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.georgeramsis.khedma.khedma.data.model.ServantPermission
 import com.georgeramsis.khedma.khedma.data.model.Student
 import com.georgeramsis.khedma.khedma.data.repository.StudentRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,34 @@ class StudentViewModel(private val repository: StudentRepository) : ViewModel() 
             }
         }
     }
+
+    private val _permission = MutableStateFlow<ServantPermission?>(null)
+    val permission: StateFlow<ServantPermission?> = _permission.asStateFlow()
+
+    fun loadServantPermission() {
+        viewModelScope.launch {
+            try {
+                val result = repository.getServantClass()
+                println("Permission result: $result")
+                _permission.value = result
+            } catch (e: Exception) {
+                println("Permission error: ${e.message}")
+                e.printStackTrace()
+            }
+        }
+    }
+
+//    fun loadServantPermission() {
+//        viewModelScope.launch {
+//            try {
+//                _permission.value = repository.getServantClass()
+//            } catch (e: Exception) {
+//                _permission.value = null
+//            }
+//        }
+//    }
 }
+
 
 sealed class StudentState {
     object Idle : StudentState()
