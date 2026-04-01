@@ -16,8 +16,8 @@ class StudentViewModel(private val repository: StudentRepository) : ViewModel() 
 
     fun getStudentByClass(classId: String) {
         viewModelScope.launch {
-            _state.value = StudentState.Loading
             try {
+                _state.value = StudentState.Loading
                 val students = repository.getStudentsByClass(classId)
                 _state.value = StudentState.Success(students)
             } catch (e: Exception) {
@@ -41,16 +41,6 @@ class StudentViewModel(private val repository: StudentRepository) : ViewModel() 
             }
         }
     }
-
-//    fun loadServantPermission() {
-//        viewModelScope.launch {
-//            try {
-//                _permission.value = repository.getServantClass()
-//            } catch (e: Exception) {
-//                _permission.value = null
-//            }
-//        }
-//    }
 }
 
 

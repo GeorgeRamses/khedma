@@ -16,9 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.georgeramsis.khedma.khedma.data.model.Student
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.StudentState
@@ -26,10 +23,19 @@ import com.georgeramsis.khedma.khedma.presentation.viewmodel.StudentViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun StudentScreen(classId: String, viewModel: StudentViewModel = koinViewModel()) {
+fun StudentScreen(viewModel: StudentViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
+    val permission by viewModel.permission.collectAsState()
     LaunchedEffect(Unit) {
-        viewModel.getStudentByClass(classId)
+        viewModel.loadServantPermission()
+    }
+    LaunchedEffect(permission) {
+        permission?.let { perm ->
+            perm.classId?.let { classId ->
+                viewModel.getStudentByClass(classId)
+            }
+
+        }
     }
     Column(modifier = Modifier.fillMaxSize()) {
         StudentScreenTitle()

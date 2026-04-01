@@ -1,8 +1,10 @@
 package com.georgeramsis.khedma.khedma.data.repository
 
+import com.georgeramsis.khedma.khedma.data.model.Profile
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.postgrest.postgrest
 
 class AuthRepository(private val client: SupabaseClient) {
     suspend fun signIn(email: String, password: String) {
@@ -16,5 +18,19 @@ class AuthRepository(private val client: SupabaseClient) {
         client.auth.signOut()
     }
 
+    suspend fun awaitReady() {
+        client.auth.awaitInitialization()
+    }
+
     fun currentUser() = client.auth.currentUserOrNull()
+
+    suspend fun getProfile(): Profile? {
+        val userId = currentUser()?.id ?: return null
+        return client.postgrest["profiles"].select {
+            filter {
+                eq("id", userId)
+            }
+        }.decodeSingleOrNull<Profile>()
+    }
 }
+

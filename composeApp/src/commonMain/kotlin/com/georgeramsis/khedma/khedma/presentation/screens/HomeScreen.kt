@@ -17,12 +17,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.georgeramsis.khedma.khedma.presentation.viewmodel.AuthViewModel
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.StudentViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun HomeScreen(navToStudents: (String) -> Unit, viewModel: StudentViewModel = koinViewModel()) {
+fun HomeScreen(
+    navToStudents: () -> Unit,
+    authViewModel: AuthViewModel = koinViewModel(),
+    viewModel: StudentViewModel = koinViewModel()
+) {
     val permission by viewModel.permission.collectAsState()
+    val profile by authViewModel.profile.collectAsState()
     var classId: String by remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
         viewModel.loadServantPermission()
@@ -41,11 +47,10 @@ fun HomeScreen(navToStudents: (String) -> Unit, viewModel: StudentViewModel = ko
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Welcome to Khedma")
+        Text("Welcome, ${profile?.fullName ?: "..."}")
         Spacer(Modifier.height(30.dp))
         Button(onClick = {
-            if (classId.isNotEmpty())
-                navToStudents(classId)
+            navToStudents()
         }, enabled = classId.isNotEmpty()) {
             Text("View students")
         }
