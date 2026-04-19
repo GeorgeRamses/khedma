@@ -1,6 +1,7 @@
 package com.georgeramsis.khedma.khedma.data.repository
 
 import com.georgeramsis.khedma.khedma.data.model.Profile
+import com.georgeramsis.khedma.khedma.data.model.ServantPermission
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
@@ -31,6 +32,14 @@ class AuthRepository(private val client: SupabaseClient) {
                 eq("id", userId)
             }
         }.decodeSingleOrNull<Profile>()
+    }
+
+    suspend fun getServantClass(): ServantPermission? {
+        return client.postgrest["servant_permissions"].select() {
+            filter {
+                eq("servant_id", client.auth.currentUserOrNull()?.id ?: "")
+            }
+        }.decodeSingleOrNull<ServantPermission>()
     }
 }
 

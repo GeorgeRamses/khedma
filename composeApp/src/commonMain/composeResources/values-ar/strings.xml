@@ -1,0 +1,9 @@
+<resources>
+    <string name="welcome">أهلاً، %1$s 👋</string>
+    <string name="birthdays">أعياد الميلاد</string>
+    <string name="need_visits">يحتاجون زيارة</string>
+    <string name="upcoming_activities">الأنشطة القادمة</string>
+    <string name="upcoming_birthdays">أعياد الميلاد القادمة</string>
+    <string name="last_attendance">آخر حضور: (%1$s)</string>
+    <string name="checking_auth">جاري التحقق...</string>
+</resources>

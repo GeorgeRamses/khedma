@@ -1,11 +1,10 @@
 package com.georgeramsis.khedma.khedma.data.repository
 
+import com.georgeramsis.khedma.khedma.data.model.AbsenceRecord
 import com.georgeramsis.khedma.khedma.data.model.Activity
-import com.georgeramsis.khedma.khedma.data.model.Attendance
 import com.georgeramsis.khedma.khedma.data.model.ServantPermission
 import com.georgeramsis.khedma.khedma.data.model.Student
 import io.github.jan.supabase.SupabaseClient
-import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.datetime.LocalDate
@@ -25,41 +24,40 @@ class StudentRepository(private val client: SupabaseClient) {
         }.decodeList<Student>()
     }
 
-    suspend fun getServantClass(): ServantPermission? {
-        return client.postgrest["servant_permissions"].select() {
+    suspend fun getStudentsByStage(stageId: String): List<Student> {
+
+        return client.postgrest["students"].select() {
             filter {
-                eq("servant_id", client.auth.currentUserOrNull()?.id ?: "")
+                eq("current_stage_id", stageId)
             }
-        }.decodeSingleOrNull<ServantPermission>()
+        }.decodeList<Student>()
     }
 
-    suspend fun getUpcomingBirthdays(classId: String): List<Student> {
+    fun getUpcomingBirthdays(students: List<Student>): List<Student> {
         val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-        val students = getStudentsByClass(classId).filter { student ->
+        return students.filter { student ->
             runCatching { LocalDate.parse(student.dateOfBirth) }.getOrNull()?.let { birthday ->
                 birthday.month == today.month && birthday.day >= today.day
             } ?: false
         }
-        return students
     }
 
-    suspend fun getStudentsNeedingVisit(classId: String): List<StudentVisitNeed> {
-        val students = getStudentsByClass(classId)
-        val attendanceRecords = client.postgrest["attendance"].select {
-            filter {
-                eq("class_id", classId)
-            }
-        }.decodeList<Attendance>()
+    suspend fun getStageStudentsNeedingVisit(permission: ServantPermission): List<AbsenceRecord> {
+        val allAbsence = client.postgrest.rpc("get_last_session_absences").decodeList<AbsenceRecord>()
+        val studentsStage = permission.stageId?.let { stageId ->
+            getStudentsByStage(stageId).mapNotNull { it.id }.toSet()
+        }
 
-        val needVisit = attendanceRecords.groupBy { it.studentId }
-            .mapValues { (_, records) ->
-                records.sortedByDescending { it.date }
-                    .takeWhile { it.status == "absent" }.count()
-            }
-            .filter { (_, count) -> count > 0 }
+        val myStageAbsent = allAbsence.filter { absence ->
+            absence.studentId in studentsStage.orEmpty()
+        }
+        return myStageAbsent
+    }
 
-        return students.filter { it.id in needVisit.keys }
-            .map { StudentVisitNeed(it, needVisit[it.id] ?: 0) }
+    suspend fun getClassStudentsNeedingVisit(permission: ServantPermission): List<AbsenceRecord> {
+        val allAbsence = client.postgrest.rpc("get_last_session_absences").decodeList<AbsenceRecord>()
+        val myClassAbsent = allAbsence.filter { it.classId == permission.classId }
+        return myClassAbsent
     }
 
     suspend fun getUpcomingActivities(): List<Activity> {
@@ -70,5 +68,5 @@ class StudentRepository(private val client: SupabaseClient) {
     }
 }
 
-data class StudentVisitNeed(val student: Student, val consecutiveAbsences: Int)
+//data class StudentVisitNeed(val student: Student, val consecutiveAbsences: Int)
 

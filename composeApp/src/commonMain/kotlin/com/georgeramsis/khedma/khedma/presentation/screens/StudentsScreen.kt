@@ -18,23 +18,23 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.georgeramsis.khedma.khedma.data.model.Student
+import com.georgeramsis.khedma.khedma.presentation.viewmodel.AuthViewModel
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.StudentState
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.StudentViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun StudentScreen(viewModel: StudentViewModel = koinViewModel()) {
+fun StudentScreen(
+    authViewModel: AuthViewModel,
+    viewModel: StudentViewModel = koinViewModel()
+) {
     val state by viewModel.state.collectAsState()
-    val permission by viewModel.permission.collectAsState()
-    LaunchedEffect(Unit) {
-        viewModel.loadServantPermission()
-    }
+    val permission by authViewModel.permission.collectAsState()
     LaunchedEffect(permission) {
         permission?.let { perm ->
             perm.classId?.let { classId ->
                 viewModel.getStudentByClass(classId)
             }
-
         }
     }
     Column(modifier = Modifier.fillMaxSize()) {

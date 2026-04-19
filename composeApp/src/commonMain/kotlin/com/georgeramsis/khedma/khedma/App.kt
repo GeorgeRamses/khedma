@@ -74,12 +74,10 @@ fun App() {
                         )
                     }
                     composable<HomeRoute> {
-                        HomeScreen(navToStudents = {
-                            navController.navigate(StudentsRoute)
-                        }, authViewModel = authViewModel)
+                        HomeScreen(authViewModel = authViewModel)
                     }
                     composable<StudentsRoute> {
-                        StudentScreen()
+                        StudentScreen(authViewModel = authViewModel)
                     }
                     composable<AttendanceRoute> {
                         AttendanceScreen()
@@ -88,7 +86,11 @@ fun App() {
                         VisitationsScreen()
                     }
                     composable<SettingsRoute> {
-                        SettingsScreen()
+                        SettingsScreen(authViewModel, onSignOut = {
+                            navController.navigate(LoginRoute) {
+                                popUpTo<HomeRoute> { inclusive = true }
+                            }
+                        })
                     }
                 }
 

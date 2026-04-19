@@ -35,7 +35,16 @@ fun BottomNavBar(navController: NavHostController) {
                 currentDestination?.hierarchy?.any { it.hasRoute(item.route::class.qualifiedName ?: "", null) } == true
             NavigationBarItem(
                 selected = selected,
-                onClick = { navController.navigate(item.route) },
+                onClick = {
+                    navController.navigate(item.route) {
+                        launchSingleTop = true
+                        popUpTo<HomeRoute> {
+                            inclusive = false
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
+                },
                 icon = { Icon(item.icon, contentDescription = item.label) },
                 label = { Text(item.label) }
             )

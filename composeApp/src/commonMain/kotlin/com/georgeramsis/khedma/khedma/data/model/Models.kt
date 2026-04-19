@@ -254,3 +254,12 @@ data class ClassAttendanceByDate(
     @SerialName("late_count") val lateCount: Long? = null,
     @SerialName("total_count") val totalCount: Long? = null
 )
+
+@Serializable
+data class AbsenceRecord(
+    @SerialName("student_id") val studentId: String,
+    @SerialName("class_id") val classId: String,
+    val date: String
+)
+
+data class AbsenceWithName(val studentName: String, val date: String)

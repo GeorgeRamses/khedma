@@ -1,0 +1,9 @@
+<resources>
+    <string name="welcome">Welcome, %1$s 👋</string>
+    <string name="birthdays">Birthdays</string>
+    <string name="need_visits">Need Visits</string>
+    <string name="upcoming_activities">Upcoming Activities</string>
+    <string name="upcoming_birthdays">Upcoming Birthdays</string>
+    <string name="last_attendance">last Attendance: (%1$s)</string>
+    <string name="checking_auth">Checking authentication...</string>
+</resources>
