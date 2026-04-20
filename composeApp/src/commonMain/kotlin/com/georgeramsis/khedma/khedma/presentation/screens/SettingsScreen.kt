@@ -1,8 +1,15 @@
 package com.georgeramsis.khedma.khedma.presentation.screens
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,21 +17,43 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.georgeramsis.khedma.khedma.data.model.AppLanguage
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.AuthState
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.AuthViewModel
+import com.georgeramsis.khedma.khedma.presentation.viewmodel.SettingsViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SettingsScreen( authViewModel: AuthViewModel ,onSignOut: () -> Unit) {
+fun SettingsScreen(authViewModel: AuthViewModel, settingsViewModel: SettingsViewModel, onSignOut: () -> Unit) {
+    val lang by settingsViewModel.language.collectAsState()
+    val isDark by settingsViewModel.isDarkMode.collectAsState()
     val state by authViewModel.state.collectAsState()
     LaunchedEffect(state) {
         if (state is AuthState.Idle)
             onSignOut()
     }
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Settings")
+
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
+        Text("Languages")
+        Row {
+            RadioButton(selected = lang.code == "en", onClick = { settingsViewModel.setLanguage(AppLanguage.English) })
+            Text("English")
+
+            RadioButton(selected = lang.code == "ar", onClick = { settingsViewModel.setLanguage(AppLanguage.Arabic) })
+            Text("العربية")
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("Dark Mode")
+            Spacer(modifier = Modifier.weight(1f))
+            Switch(checked = isDark, onCheckedChange = { settingsViewModel.setDarkMode(it) })
+        }
+
+
+        Spacer(Modifier.weight(1f))
         Button(onClick = { authViewModel.signOut() }) {
-            Text("Logout")
+            Text("Sign out")
         }
     }
 }
