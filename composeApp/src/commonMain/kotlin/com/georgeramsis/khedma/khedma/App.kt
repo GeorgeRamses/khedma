@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,56 +59,62 @@ fun App() {
 
     val currentRoute = currentBackStack?.destination?.route ?: LoginRoute::class.qualifiedName
     CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
-        MaterialTheme(colorScheme = colorScheme) {
-            if (state == AuthState.Checking) {
-                // Show loading screen or splash screen
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
-                ) {
-                    Text("Checking authentication...")
-                    CircularProgressIndicator()
-                }
-            } else {
-                Scaffold(bottomBar = { if (currentRoute != LoginRoute::class.qualifiedName) BottomNavBar(navController) }) {
-
-                    NavHost(
-                        modifier = Modifier.padding(it),
-                        navController = navController,
-                        startDestination = if (currentUser != null) HomeRoute else LoginRoute
+        key(lang.code) {
+            MaterialTheme(colorScheme = colorScheme) {
+                if (state == AuthState.Checking) {
+                    // Show loading screen or splash screen
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
                     ) {
-                        composable<LoginRoute> {
-                            LoginScreen(
-                                onLoginSuccess =
-                                    {
-                                        navController.navigate(HomeRoute) {
-                                            popUpTo<LoginRoute> { inclusive = true }
-                                        }
-                                    }, authViewModel
-                            )
-                        }
-                        composable<HomeRoute> {
-                            HomeScreen(authViewModel = authViewModel)
-                        }
-                        composable<StudentsRoute> {
-                            StudentScreen(authViewModel = authViewModel)
-                        }
-                        composable<AttendanceRoute> {
-                            AttendanceScreen()
-                        }
-                        composable<VisitationsRoute> {
-                            VisitationsScreen()
-                        }
-                        composable<SettingsRoute> {
-                            SettingsScreen(authViewModel, settingViewModel, onSignOut = {
-                                navController.navigate(LoginRoute) {
-                                    popUpTo<HomeRoute> { inclusive = true }
-                                }
-                            })
-                        }
+                        Text("Checking authentication...")
+                        CircularProgressIndicator()
                     }
+                } else {
+                    Scaffold(bottomBar = {
+                        if (currentRoute != LoginRoute::class.qualifiedName) BottomNavBar(
+                            navController
+                        )
+                    }) {
 
+                        NavHost(
+                            modifier = Modifier.padding(it),
+                            navController = navController,
+                            startDestination = if (currentUser != null) HomeRoute else LoginRoute
+                        ) {
+                            composable<LoginRoute> {
+                                LoginScreen(
+                                    onLoginSuccess =
+                                        {
+                                            navController.navigate(HomeRoute) {
+                                                popUpTo<LoginRoute> { inclusive = true }
+                                            }
+                                        }, authViewModel
+                                )
+                            }
+                            composable<HomeRoute> {
+                                HomeScreen(authViewModel = authViewModel)
+                            }
+                            composable<StudentsRoute> {
+                                StudentScreen(authViewModel = authViewModel)
+                            }
+                            composable<AttendanceRoute> {
+                                AttendanceScreen()
+                            }
+                            composable<VisitationsRoute> {
+                                VisitationsScreen()
+                            }
+                            composable<SettingsRoute> {
+                                SettingsScreen(authViewModel, settingViewModel, onSignOut = {
+                                    navController.navigate(LoginRoute) {
+                                        popUpTo<HomeRoute> { inclusive = true }
+                                    }
+                                })
+                            }
+                        }
+
+                    }
                 }
             }
         }

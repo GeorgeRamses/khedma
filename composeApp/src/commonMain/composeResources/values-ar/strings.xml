@@ -1,9 +1,18 @@
 <resources>
     <string name="welcome">أهلاً، %1$s 👋</string>
     <string name="birthdays">أعياد الميلاد</string>
-    <string name="need_visits">يحتاجون زيارة</string>
-    <string name="upcoming_activities">الأنشطة القادمة</string>
+    <string name="need_visits">يحتاجون الى افتقاد</string>
+    <string name="upcoming_activities">تنبيهات</string>
     <string name="upcoming_birthdays">أعياد الميلاد القادمة</string>
     <string name="last_attendance">آخر حضور: (%1$s)</string>
     <string name="checking_auth">جاري التحقق...</string>
+    <string name="home">الرئيسية</string>
+    <string name="search">بحث</string>
+    <string name="profile">الملف الشخصي</string>
+    <string name="settings">الإعدادات</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="attendance_log">سجل الحضور</string>
+    <string name="students_log">سجل المخدومين!</string>
+    <string name="visitation_log">سجل الافتقاد</string>
+    <string name="language">اللغة</string>
 </resources>

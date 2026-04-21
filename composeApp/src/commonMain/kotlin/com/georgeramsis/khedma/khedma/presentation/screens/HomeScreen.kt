@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cake
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PersonSearch
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.*
@@ -22,6 +23,7 @@ import com.georgeramsis.khedma.khedma.presentation.viewmodel.HomeState
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.HomeViewModel
 import khedma.composeapp.generated.resources.Res
 import khedma.composeapp.generated.resources.birthdays
+import khedma.composeapp.generated.resources.last_attendance
 import khedma.composeapp.generated.resources.need_visits
 import khedma.composeapp.generated.resources.upcoming_activities
 import khedma.composeapp.generated.resources.upcoming_birthdays
@@ -80,7 +82,7 @@ fun HomeScreen(
                     SummaryCard(
                         title = stringResource(Res.string.upcoming_activities),
                         count = activity.size,
-                        icon = Icons.Default.Schedule
+                        icon = Icons.Default.Notifications
                     )
 
                 }
@@ -118,7 +120,7 @@ fun HomeScreen(
             items(needVisits) { student ->
                 DetailCard(
                     title = "${student.studentName}: ",
-                    date = "last Attendance: (${student.date})"
+                    date = stringResource(Res.string.last_attendance, student.date)
                 )
             }
         }
@@ -126,7 +128,7 @@ fun HomeScreen(
             item {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-                    SeparationTitle(stringResource(Res.string.upcoming_activities), Icons.Default.Schedule)
+                    SeparationTitle(stringResource(Res.string.upcoming_activities), Icons.Default.Notifications)
                 }
             }
             items(activity) { act ->

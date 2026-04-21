@@ -1,6 +1,7 @@
 package com.georgeramsis.khedma.khedma.data.repository
 
 import com.georgeramsis.khedma.khedma.data.model.AppLanguage
+import com.georgeramsis.khedma.khedma.updateAppLocale
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,9 +15,14 @@ class SettingsRepository(private val settings: Settings) {
     private val _isDarkMode = MutableStateFlow(settings.getBoolean("dark_mode", false))
     val isDarkMode = _isDarkMode.asStateFlow()
 
+    init {
+        updateAppLocale(_language.value)
+    }
+
     fun setLanguage(lang: AppLanguage) {
         settings.putString("app_language_code", lang.code)
         _language.value = lang
+        updateAppLocale(lang)
     }
 
     fun setDarkMode(isDarkMode: Boolean) {

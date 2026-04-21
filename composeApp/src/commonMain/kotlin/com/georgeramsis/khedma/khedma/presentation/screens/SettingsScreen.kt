@@ -1,12 +1,6 @@
 package com.georgeramsis.khedma.khedma.presentation.screens
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
@@ -22,7 +16,10 @@ import com.georgeramsis.khedma.khedma.data.model.AppLanguage
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.AuthState
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.AuthViewModel
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.SettingsViewModel
-import org.koin.compose.viewmodel.koinViewModel
+import khedma.composeapp.generated.resources.Res
+import khedma.composeapp.generated.resources.language
+import khedma.composeapp.generated.resources.logout
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SettingsScreen(authViewModel: AuthViewModel, settingsViewModel: SettingsViewModel, onSignOut: () -> Unit) {
@@ -35,7 +32,7 @@ fun SettingsScreen(authViewModel: AuthViewModel, settingsViewModel: SettingsView
     }
 
     Column(Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Languages")
+        Text(stringResource(Res.string.language))
         Row {
             RadioButton(selected = lang.code == "en", onClick = { settingsViewModel.setLanguage(AppLanguage.English) })
             Text("English")
@@ -53,7 +50,7 @@ fun SettingsScreen(authViewModel: AuthViewModel, settingsViewModel: SettingsView
 
         Spacer(Modifier.weight(1f))
         Button(onClick = { authViewModel.signOut() }) {
-            Text("Sign out")
+            Text(stringResource(Res.string.logout))
         }
     }
 }

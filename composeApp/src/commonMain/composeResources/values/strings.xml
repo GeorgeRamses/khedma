@@ -1,9 +1,18 @@
 <resources>
     <string name="welcome">Welcome, %1$s 👋</string>
     <string name="birthdays">Birthdays</string>
-    <string name="need_visits">Need Visits</string>
+    <string name="need_visits">Need Visit</string>
     <string name="upcoming_activities">Upcoming Activities</string>
     <string name="upcoming_birthdays">Upcoming Birthdays</string>
     <string name="last_attendance">last Attendance: (%1$s)</string>
     <string name="checking_auth">Checking authentication...</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="attendance_log">Attendance</string>
+    <string name="students_log">Students</string>
+    <string name="visitation_log">Visitations</string>
+    <string name="language">Language</string>
 </resources>
