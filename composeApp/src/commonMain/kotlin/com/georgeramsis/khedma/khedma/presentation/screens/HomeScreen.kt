@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.AuthViewModel
@@ -134,7 +135,8 @@ fun HomeScreen(
             items(activity) { act ->
                 DetailCard(
                     title = "${act.title}: ",
-                    date = "(${act.date})"
+                    date = "(${act.date})",
+                    description = act.description
                 )
             }
         }
@@ -154,19 +156,25 @@ fun RowScope.SummaryCard(title: String, count: Int, icon: ImageVector) {
 
 @Composable
 fun SeparationTitle(title: String, icon: ImageVector) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(7.dp)) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(7.dp), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
         Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-        Text(title, style = MaterialTheme.typography.bodyMedium)
+        Text(title, style = MaterialTheme.typography.titleMedium, fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold)
     }
 }
 
 @Composable
-fun DetailCard(title: String, date: String) {
+fun DetailCard(title: String, date: String, description: String? = null) {
     ElevatedCard(modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)) {
         Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
                 Text(date, style = MaterialTheme.typography.bodyMedium)
+            }
+            description?.let {
+                Row(Modifier.fillMaxWidth().padding(top = 4.dp)) {
+                    Text(it, style = MaterialTheme.typography.bodyMedium)
+                }
+
             }
         }
     }

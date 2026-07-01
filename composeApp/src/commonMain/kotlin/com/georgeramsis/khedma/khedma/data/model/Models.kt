@@ -262,4 +262,16 @@ data class AbsenceRecord(
     val date: String
 )
 
+@Serializable
+data class ClassAndStageName(
+    @SerialName("stage_name") val stageName: String,
+    @SerialName("class_name") val className: String
+)
+
+@Serializable
+data class ClassIdParam(
+    @SerialName("class_id") val classId: String
+)
+@Serializable
+data class StageNameResult(val name: String)
 data class AbsenceWithName(val studentName: String, val date: String)

@@ -15,4 +15,11 @@
     <string name="students_log">Students</string>
     <string name="visitation_log">Visitations</string>
     <string name="language">Language</string>
+    <string name="stage_title">Stage</string>
+    <string name="class_title">Class</string>
+    <string name="st_name">Name</string>
+    <string name="st_birthdate">Birth Date</string>
+    <string name="st_phone">Phone</string>
+    <string name="edit">Edit</string>
+    <string name="search_students">Search Students</string>
 </resources>

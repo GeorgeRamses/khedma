@@ -19,21 +19,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.georgeramsis.khedma.khedma.presentation.navigation.AttendanceRoute
 import com.georgeramsis.khedma.khedma.presentation.navigation.BottomNavBar
 import com.georgeramsis.khedma.khedma.presentation.navigation.HomeRoute
 import com.georgeramsis.khedma.khedma.presentation.navigation.LoginRoute
 import com.georgeramsis.khedma.khedma.presentation.navigation.SettingsRoute
+import com.georgeramsis.khedma.khedma.presentation.navigation.StudentDetailRoute
 import com.georgeramsis.khedma.khedma.presentation.navigation.StudentsRoute
 import com.georgeramsis.khedma.khedma.presentation.navigation.VisitationsRoute
 import com.georgeramsis.khedma.khedma.presentation.screens.AttendanceScreen
 import com.georgeramsis.khedma.khedma.presentation.screens.HomeScreen
 import com.georgeramsis.khedma.khedma.presentation.screens.LoginScreen
 import com.georgeramsis.khedma.khedma.presentation.screens.SettingsScreen
+import com.georgeramsis.khedma.khedma.presentation.screens.StudentDetailsScreen
 import com.georgeramsis.khedma.khedma.presentation.screens.StudentScreen
 import com.georgeramsis.khedma.khedma.presentation.screens.VisitationsScreen
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.AuthState
@@ -47,7 +51,6 @@ fun App() {
     val navController = rememberNavController()
     val authViewModel: AuthViewModel = koinViewModel()
     val settingViewModel: SettingsViewModel = koinViewModel()
-
     val state by authViewModel.state.collectAsState()
     val currentUser by authViewModel.profile.collectAsState()
     val currentBackStack by navController.currentBackStackEntryAsState()
@@ -57,7 +60,12 @@ fun App() {
     val layoutDirection = if (lang.isRtl) LayoutDirection.Rtl else LayoutDirection.Ltr
     val colorScheme = if (isDarkMode) darkColorScheme() else lightColorScheme()
 
-    val currentRoute = currentBackStack?.destination?.route ?: LoginRoute::class.qualifiedName
+    val showBottomBar = currentBackStack?.destination?.let { destination ->
+        !destination.hasRoute(LoginRoute::class) &&
+                !destination.hasRoute(StudentDetailRoute::class)
+    } ?: true
+
+
     CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
         key(lang.code) {
             MaterialTheme(colorScheme = colorScheme) {
@@ -73,7 +81,7 @@ fun App() {
                     }
                 } else {
                     Scaffold(bottomBar = {
-                        if (currentRoute != LoginRoute::class.qualifiedName) BottomNavBar(
+                        if (showBottomBar) BottomNavBar(
                             navController
                         )
                     }) {
@@ -97,7 +105,14 @@ fun App() {
                                 HomeScreen(authViewModel = authViewModel)
                             }
                             composable<StudentsRoute> {
-                                StudentScreen(authViewModel = authViewModel)
+                                StudentScreen(
+                                    authViewModel = authViewModel,
+                                    onStudentClick = { studentId -> navController.navigate(StudentDetailRoute(studentId)) })
+                            }
+                            composable<StudentDetailRoute> { backStackEntry ->
+                                val rout = backStackEntry.toRoute<StudentDetailRoute>()
+                                val studentId = rout.studentId
+                                StudentDetailsScreen(studentId = studentId, onBack = { navController.popBackStack() })
                             }
                             composable<AttendanceRoute> {
                                 AttendanceScreen()

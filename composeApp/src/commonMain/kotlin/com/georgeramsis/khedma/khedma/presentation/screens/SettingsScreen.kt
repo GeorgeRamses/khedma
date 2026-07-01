@@ -43,7 +43,7 @@ fun SettingsScreen(authViewModel: AuthViewModel, settingsViewModel: SettingsView
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text("Dark Mode")
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(8.dp))
             Switch(checked = isDark, onCheckedChange = { settingsViewModel.setDarkMode(it) })
         }
 

@@ -12,7 +12,14 @@
     <string name="settings">الإعدادات</string>
     <string name="logout">تسجيل الخروج</string>
     <string name="attendance_log">سجل الحضور</string>
-    <string name="students_log">سجل المخدومين!</string>
+    <string name="students_log">المخدومين</string>
     <string name="visitation_log">سجل الافتقاد</string>
     <string name="language">اللغة</string>
+    <string name="stage_title">المرحلة</string>
+    <string name="class_title">الفصل</string>
+    <string name="st_name">الاسم</string>
+    <string name="st_birthdate">تاريخ الميلاد</string>
+    <string name="st_phone">الهاتف</string>
+    <string name="edit">تعديل</string>
+    <string name="search_students">بحث عن المخدومين</string>
 </resources>

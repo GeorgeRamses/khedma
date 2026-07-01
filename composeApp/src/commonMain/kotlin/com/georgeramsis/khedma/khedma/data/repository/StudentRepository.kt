@@ -2,11 +2,15 @@ package com.georgeramsis.khedma.khedma.data.repository
 
 import com.georgeramsis.khedma.khedma.data.model.AbsenceRecord
 import com.georgeramsis.khedma.khedma.data.model.Activity
+import com.georgeramsis.khedma.khedma.data.model.ClassAndStageName
+import com.georgeramsis.khedma.khedma.data.model.ClassIdParam
 import com.georgeramsis.khedma.khedma.data.model.ServantPermission
+import com.georgeramsis.khedma.khedma.data.model.StageNameResult
 import com.georgeramsis.khedma.khedma.data.model.Student
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.postgrest.rpc
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -22,6 +26,22 @@ class StudentRepository(private val client: SupabaseClient) {
                 eq("student_classes.class_id", classId)
             }
         }.decodeList<Student>()
+    }
+
+    suspend fun getClassAndStageName(classId: String): ClassAndStageName {
+        // This function can be implemented to fetch stage and class names based on IDs
+        // For example, you can create a mapping of stageId to stageName and classId to className
+        return client.postgrest.rpc("get_class_and_stage_name", ClassIdParam(classId))
+            .decodeSingle<ClassAndStageName>()
+    }
+
+    suspend fun getStageName(stageId: String): ClassAndStageName {
+        val result = client.postgrest["stages"].select(Columns.list("name")) {
+            filter {
+                eq("id", stageId)
+            }
+        }.decodeSingle<StageNameResult>()
+        return ClassAndStageName(stageName = result.name, className = "")
     }
 
     suspend fun getStudentsByStage(stageId: String): List<Student> {
@@ -41,6 +61,7 @@ class StudentRepository(private val client: SupabaseClient) {
             } ?: false
         }
     }
+
 
     suspend fun getStageStudentsNeedingVisit(permission: ServantPermission): List<AbsenceRecord> {
         val allAbsence = client.postgrest.rpc("get_last_session_absences").decodeList<AbsenceRecord>()
@@ -68,5 +89,5 @@ class StudentRepository(private val client: SupabaseClient) {
     }
 }
 
-//data class StudentVisitNeed(val student: Student, val consecutiveAbsences: Int)
+
 
