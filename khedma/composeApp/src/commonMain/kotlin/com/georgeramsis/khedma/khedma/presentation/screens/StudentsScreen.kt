@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.georgeramsis.khedma.khedma.data.model.Student
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.AuthViewModel
@@ -38,7 +39,7 @@ import kotlin.math.abs
 
 @Composable
 fun StudentScreen(
-    authViewModel: AuthViewModel,
+    authViewModel: AuthViewModel=koinViewModel(),
     viewModel: StudentViewModel = koinViewModel(), onStudentClick: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
@@ -227,4 +228,10 @@ fun StudentCard(student: Student, onStudentClick: (String) -> Unit) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StudentScreenPreview() {
+    StudentScreen {}
 }
