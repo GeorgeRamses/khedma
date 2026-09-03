@@ -7,6 +7,8 @@ import com.georgeramsis.khedma.khedma.data.model.ClassIdParam
 import com.georgeramsis.khedma.khedma.data.model.ServantPermission
 import com.georgeramsis.khedma.khedma.data.model.StageNameResult
 import com.georgeramsis.khedma.khedma.data.model.Student
+import com.georgeramsis.khedma.khedma.data.model.StudentDetails
+import com.georgeramsis.khedma.khedma.data.model.StudentIDParam
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
@@ -17,6 +19,12 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 
 class StudentRepository(private val client: SupabaseClient) {
+    suspend fun getStudentById(id: String): Student? {
+        return client.postgrest["students"].select() {
+            filter { eq("id", id) }
+        }.decodeSingleOrNull<Student>()
+    }
+
     suspend fun getStudentsByClass(classId: String): List<Student> {
 
         return client.postgrest["students"].select(
@@ -26,6 +34,16 @@ class StudentRepository(private val client: SupabaseClient) {
                 eq("student_classes.class_id", classId)
             }
         }.decodeList<Student>()
+    }
+
+    suspend fun getStudentDetails(studentId: String): StudentDetails? {
+        return client.postgrest.rpc("get_student_details", StudentIDParam(studentId))
+            .decodeSingleOrNull<StudentDetails>()
+    }
+
+    suspend fun getClassAndStageNameByStudent(studentId: String): ClassAndStageName? {
+        return client.postgrest.rpc("get_class_and_stage_name_by_student", StudentIDParam(studentId))
+            .decodeSingleOrNull<ClassAndStageName>()
     }
 
     suspend fun getClassAndStageName(classId: String): ClassAndStageName {

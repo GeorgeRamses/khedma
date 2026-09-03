@@ -40,7 +40,7 @@ import kotlin.math.abs
 @Composable
 fun StudentScreen(
     authViewModel: AuthViewModel=koinViewModel(),
-    viewModel: StudentViewModel = koinViewModel(), onStudentClick: (String) -> Unit
+    viewModel: StudentViewModel = koinViewModel(), onStudentClick: (String) -> Unit,onAddClick: () -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
     val permission by authViewModel.permission.collectAsState()
@@ -64,7 +64,7 @@ fun StudentScreen(
         floatingActionButton = {
             if (!isJunior) {
                 FloatingActionButton(
-                    onClick = { /* TODO: Implement add student functionality */ },
+                    onClick = { onAddClick() },
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Icon(Icons.Default.Add, contentDescription = "Add Student")
@@ -233,5 +233,5 @@ fun StudentCard(student: Student, onStudentClick: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun StudentScreenPreview() {
-    StudentScreen {}
+    StudentScreen (onStudentClick = {}){}
 }

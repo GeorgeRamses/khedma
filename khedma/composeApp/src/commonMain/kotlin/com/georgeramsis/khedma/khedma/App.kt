@@ -107,7 +107,9 @@ fun App() {
                             composable<StudentsRoute> {
                                 StudentScreen(
                                     authViewModel = authViewModel,
-                                    onStudentClick = { studentId -> navController.navigate(StudentDetailRoute(studentId)) })
+                                    onStudentClick = { studentId -> navController.navigate(StudentDetailRoute(studentId)) },
+                                    onAddClick = { navController.navigate(StudentDetailRoute(null)) },
+                                )
                             }
                             composable<StudentDetailRoute> { backStackEntry ->
                                 val rout = backStackEntry.toRoute<StudentDetailRoute>()

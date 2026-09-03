@@ -41,6 +41,26 @@ data class Student(
     @SerialName("updated_at") val updatedAt: String? = null
 )
 
+// -------student details------------------------------------------------
+@Serializable
+data class StudentDetails(
+    val id: String? = null,
+    @SerialName("first_name") val firstName: String,
+    @SerialName("last_name") val lastName: String,
+    @SerialName("date_of_birth") val dateOfBirth: String,
+    @SerialName("current_stage_id") val stageId: String? = null,
+    val phone: String? = null,
+    @SerialName("parent_email") val email: String? = null,
+    val address: String? = null,
+    val notes: String? = null,
+    @SerialName("is_active") val isActive: Boolean? = true,
+    @SerialName("created_by") val createdBy: String? = null,
+    @SerialName("created_at") val createdAt: String? = null,
+    @SerialName("updated_at") val updatedAt: String? = null,
+    @SerialName("stage_name") val stageName: String? = null,
+    @SerialName("class_name") val className: String? = null,
+    @SerialName("class_id") val classId: String? = null
+)
 // ─── Stage ─────────────────────────────────────────────────────────────────
 
 @Serializable
@@ -269,9 +289,15 @@ data class ClassAndStageName(
 )
 
 @Serializable
+data class StudentIDParam(
+    @SerialName("p_student_id") val studentId: String
+)
+
+@Serializable
 data class ClassIdParam(
     @SerialName("class_id") val classId: String
 )
+
 @Serializable
 data class StageNameResult(val name: String)
 data class AbsenceWithName(val studentName: String, val date: String)

@@ -6,6 +6,7 @@ import com.georgeramsis.khedma.khedma.data.repository.StudentRepository
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.AuthViewModel
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.HomeViewModel
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.SettingsViewModel
+import com.georgeramsis.khedma.khedma.presentation.viewmodel.StudentDetailViewModel
 import com.georgeramsis.khedma.khedma.presentation.viewmodel.StudentViewModel
 import com.georgeramsis.khedma.khedma.supabase.getSupabaseKey
 import com.georgeramsis.khedma.khedma.supabase.getSupabaseUrl
@@ -31,6 +32,7 @@ val supabaseModule = module {
     single { StudentRepository(get()) }
     viewModel { StudentViewModel(get()) }
     viewModel { HomeViewModel(get()) }
+    viewModel { StudentDetailViewModel(get()) }
     single { Settings() }
     single { SettingsRepository(get()) }
     viewModel { SettingsViewModel(get()) }

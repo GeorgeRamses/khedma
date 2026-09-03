@@ -20,6 +20,9 @@
     <string name="st_name">Name</string>
     <string name="st_birthdate">Birth Date</string>
     <string name="st_phone">Phone</string>
+    <string name="st_address">Address</string>
+    <string name="st_email">Email</string>
+    <string name="st_notes">Notes</string>
     <string name="edit">Edit</string>
     <string name="search_students">Search Students</string>
 </resources>

@@ -20,6 +20,9 @@
     <string name="st_name">الاسم</string>
     <string name="st_birthdate">تاريخ الميلاد</string>
     <string name="st_phone">الهاتف</string>
+    <string name="st_address">العنوان</string>
+    <string name="st_email">البريد ألإلكتروني</string>
+    <string name="st_notes">ملا حاظات</string>
     <string name="edit">تعديل</string>
     <string name="search_students">بحث عن المخدومين</string>
 </resources>
